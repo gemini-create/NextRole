@@ -1,8 +1,8 @@
-const API_URL = "http://localhost:5000/api/jobs";
+const API_URL = import.meta.env.VITE_API_URL;
 
 // GET ALL JOBS
 export const getJobs = async () => {
-  const res = await fetch(API_URL);
+  const res = await fetch(`${API_URL}/jobs`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch jobs");
@@ -13,7 +13,7 @@ export const getJobs = async () => {
 
 // CREATE JOB
 export const createJob = async (newJob) => {
-  const res = await fetch(API_URL, {
+  const res = await fetch(`${API_URL}/jobs`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export const createJob = async (newJob) => {
 
 // UPDATE JOB
 export const updateJob = async (updatedJob) => {
-  const res = await fetch(`${API_URL}/${updatedJob._id}`, {
+  const res = await fetch(`${API_URL}/jobs/${updatedJob._id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export const updateJob = async (updatedJob) => {
 
 // DELETE JOB
 export const deleteJob = async (id) => {
-  const res = await fetch(`${API_URL}/${id}`, {
+  const res = await fetch(`${API_URL}/jobs/${id}`, {
     method: "DELETE",
   });
 
