@@ -1,7 +1,7 @@
 import { useState, useEffect  } from 'react';
 import { STATUSES } from '../data/status';
 import { FaXmark } from "react-icons/fa6";
-import Dropdown from "./Dropdown";
+import DropDown from "./DropDown";
 
 const AddJobModal = ({ isOpen, onClose,onAddJob,editingJob,onUpdateJob }) => {
     const isEditing = Boolean(editingJob);
@@ -121,7 +121,7 @@ const AddJobModal = ({ isOpen, onClose,onAddJob,editingJob,onUpdateJob }) => {
 
             <div className="formGroup">
               <label>Status</label>
-              <Dropdown options={STATUSES.map(status=>status.key)} selected={inputs.status}
+              <DropDown options={STATUSES.map(status=>status.key)} selected={inputs.status}
                 onSelect={(value) => setInputs(prev => ({...prev,status: value}))}/>
             </div>
 
