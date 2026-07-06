@@ -17,7 +17,7 @@ function Column({status,jobs,onView,onEdit, onDelete}){
                 <div className="emptyCard">Nothing here yet.</div>
             ) : (
                 jobs.map((job) => (
-                <JobCard key={job.id} job={job}  onView={onView} onEdit={onEdit} onDelete={onDelete}></JobCard>
+                <JobCard key={job._id} job={job}  onView={onView} onEdit={onEdit} onDelete={onDelete}></JobCard>
                 ))
             )
             }</div>

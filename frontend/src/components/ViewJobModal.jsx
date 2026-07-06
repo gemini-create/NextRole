@@ -1,4 +1,4 @@
-import { FaXmark, FaBuilding, FaBriefcase, FaCalendar, FaDollarSign, FaLink, FaFileLines } from "react-icons/fa6";
+import { FaXmark,FaSpinner, FaBuilding, FaBriefcase, FaCalendar, FaDollarSign, FaLink, FaFileLines } from "react-icons/fa6";
 
 function ViewJobModal({ isOpen, onClose, job }) {
 
@@ -35,7 +35,7 @@ function ViewJobModal({ isOpen, onClose, job }) {
           </div>
 
           <div className="detailItem">
-            <FaCalendar />
+            <FaSpinner />
             <div>
               <label>Status</label>
               <p>{job.status}</p>

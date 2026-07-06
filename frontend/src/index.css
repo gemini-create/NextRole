@@ -5,17 +5,12 @@
 }
 
 body{
-
     background:#fafafa;
-
     font-family:Arial, Helvetica, sans-serif;
-
 }
 
 .app{
-
     min-height:100vh;
-
 }
 .navbar{
     display:flex;
@@ -23,6 +18,7 @@ body{
     align-items:center;
     padding:20px 35px;
     border-bottom:1px solid #ddd;
+    gap:8px;
 }
 
 .logo{
@@ -118,7 +114,7 @@ body{
   padding: 18px;
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  min-height: 550px;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -470,7 +466,8 @@ form {
   color: #dc2626;
 }
 .viewModal{
-    max-width:600px;
+    max-width:500px;
+    margin:0 10px;
 }
 
 .detailsContainer{
@@ -488,7 +485,7 @@ form {
 
 .detailItem svg{
     font-size:20px;
-    color:#2563eb;
+    color:#0f766e;;
     margin-top:2px;
 }
 
@@ -507,7 +504,7 @@ form {
 }
 
 .detailItem a{
-    color:#2563eb;
+    color:#0f766e;
 }
 
 .detailItem a:hover{
@@ -519,10 +516,11 @@ form {
 }
 
 .deleteModal{
-    width:420px;
+    width:410px;
     background:white;
     border-radius:18px;
     padding:24px;
+    margin: 0 10px;
 }
 
 .deleteBody{
@@ -533,21 +531,14 @@ form {
 .deleteIcon{
     width:70px;
     height:70px;
-
     margin:auto;
-
     border-radius:50%;
-
     background:#fee2e2;
-
     display:flex;
     justify-content:center;
     align-items:center;
-
     color:#dc2626;
-
     font-size:30px;
-
     margin-bottom:20px;
 }
 
@@ -563,15 +554,10 @@ form {
 .deleteBtn{
     background:#dc2626;
     color:white;
-
     border:none;
-
     padding:12px 20px;
-
     border-radius:10px;
-
     cursor:pointer;
-
     transition:.2s;
 }
 
@@ -589,12 +575,18 @@ form {
 }
 /* Mobile */
 @media(max-width:640px){
+.addBtn{
+    padding:6px 11px;
+    font-size:14px;
+}
 
 .formRow{
 grid-template-columns:1fr;
 }
-
+.modalOverlay{
+  padding:16px 8px;
+}
 .modal{
-padding:20px;
+padding:18px;
 }
 }
