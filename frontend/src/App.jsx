@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from "react";
 
 import Navbar from "./components/Navbar";
@@ -8,13 +6,10 @@ import Board from "./components/Board";
 import AddJobModal from "./components/AddJobModal";
 import ViewJobModal from "./components/ViewJobModal";
 import DeleteJobModal from "./components/DeleteJobModal";
+import AuthModal from "./components/AuthModal";
 
-import {
-  getJobs,
-  createJob,
-  updateJob,
-  deleteJob,
-} from "./services/jobService";
+import { getJobs,createJob,updateJob,deleteJob,} from "./services/jobService";
+import { logout,getMe } from "./services/authService";
 
 const App = () => {
   const [jobs, setJobs] = useState([]);
@@ -27,90 +22,119 @@ const App = () => {
   const [editingJob, setEditingJob] = useState(null);
   const [error, setError] = useState("");
 
-  // Fetch all jobs
+    // login/signup
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [authMode, setAuthMode] = useState("login");
+
+  //fetch all jobs
   const fetchJobs = async () => {
     try {
       const data = await getJobs();
       setJobs(data);
-      setError("");   // Clear old errors
-    } catch (error) {
+      setError("");
+    } 
+    catch (error) {
       setError(error.message);
-      setTimeout(() => {
-    setError("");
-  }, 3000);
+      setTimeout(() => { setError("");}, 3000);
     }
   };
 
   useEffect(() => {
-    fetchJobs();
-  }, []);
+    const restoreUser  = async ()=>{
+      try{
+        const data = await getMe();
+        setUser(data.user);
+      }catch{
+        setUser(null);
+      }
+    };
+    restoreUser();
+  },[]);
 
-  // CREATE
+  useEffect(() => {
+    if(user){
+        fetchJobs();
+    }
+  }, [user]);
+
+  //create job
   const handleAddJob = async (newJob) => {
     try {
-      await createJob(newJob);
+      const data= await createJob(newJob);
       fetchJobs();
       setIsModalOpen(false);
-      setError("");   // Clear old errors
-    } catch (error) {
+      setError(""); 
+    } 
+    catch (error) {
       setError(error.message);
-      setTimeout(() => {
-    setError("");
-  }, 3000);
+      setTimeout(() => {setError("");}, 3000);
     }
   };
 
-  // READ
+  //open view modal
   const handleView = (job) => {
     setSelectedJob(job);
     setIsViewOpen(true);
   };
 
-  // OPEN EDIT MODAL
+  //open edit modal
   const handleEdit = (job) => {
     setEditingJob(job);
     setIsModalOpen(true);
   };
 
-  // UPDATE
+  //update
   const handleUpdateJob = async (updatedJob) => {
     try {
-      await updateJob(updatedJob);
-
+      const data = await updateJob(updatedJob);
       fetchJobs();
-
       setEditingJob(null);
       setIsModalOpen(false);
-      setError("");   // Clear old errors
-    } catch (error) {
+      setError(""); 
+    } 
+    catch (error) {
       setError(error.message);
-      setTimeout(() => {
-    setError("");
-  }, 3000);
+      setTimeout(() => { setError("");}, 3000);
     }
   };
 
-  // OPEN DELETE MODAL
+  //open delete modal
   const handleDelete = (job) => {
     setSelectedJob(job);
     setIsDeleteOpen(true);
   };
 
-  // DELETE
+  //delete
   const handleDeleteJob = async (id) => {
     try {
-      await deleteJob(id);
-
+      const data=await deleteJob(id);
       fetchJobs();
-      setError("");   // Clear old errors
+      setError("");  
       setIsDeleteOpen(false);
       setSelectedJob(null);
-    } catch (error) {
+    } 
+    catch (error) {
       setError(error.message);
-      setTimeout(() => {
-    setError("");
-  }, 3000);
+      setTimeout(() => {setError("");}, 3000);
     }
+  };
+  //setting the user state
+  const handleLogin = (loggedInUser) => {
+    setUser(loggedInUser);
+    setIsAuthOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try{
+      await logout();
+      setUser(null);
+      setJobs([]);
+    }
+     catch(error){
+      setError(error.message);
+      setTimeout(() => {setError("");}, 3000);
+     }
   };
 
   return (
@@ -120,11 +144,24 @@ const App = () => {
         {error}
       </div>
     )}
+    
       <Navbar
-        onAddClick={() => {
+      user={user}
+      onAddClick={() => {
+        if(!user){
+          setAuthMode("login");
+          setIsAuthOpen(true);
+          return;
+        }
           setEditingJob(null);
           setIsModalOpen(true);
         }}
+
+        onUserClick={()=>{
+          setAuthMode("login");
+          setIsAuthOpen(true);
+        }}
+        onLogout={handleLogout}
       />
 
       <Stats jobs={jobs} />
@@ -165,7 +202,15 @@ const App = () => {
         job={selectedJob}
         onDelete={handleDeleteJob}
       />
+      <AuthModal
+          isOpen={isAuthOpen}
+          onClose={() => setIsAuthOpen(false)}
+          mode={authMode}
+          setMode={setAuthMode}
+          onLogin={handleLogin}
+          />
     </div>
+
   );
 };
 

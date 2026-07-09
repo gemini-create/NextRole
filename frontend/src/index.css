@@ -38,13 +38,29 @@ body{
     border-radius:8px;
     font-weight:bold;
 }
+.navActions{
+  display: flex;
+  align-items: center;
+  gap:18px;
+}
+
+.userBtn{
+  color:#0f766e;
+  font-size: 2rem;
+  border: none;
+  background: none;
+}
+
+.userBtn:hover{
+    color:#115e59;
+}
 
 .addBtn{
     background:#0f766e;
     color:white;
     border:none;
-    padding:12px 22px;
-    border-radius:8px;
+    padding:10px 18px;
+    border-radius:999px;
     cursor:pointer;
     font-size:15px;
 }
@@ -572,6 +588,27 @@ form {
     border-radius:8px;
     margin-bottom:20px;
     font-weight:500;
+}
+
+.authModal{
+    max-width:450px;
+}
+
+.authSwitch{
+    text-align:center;
+    margin-top:18px;
+    font-size:.95rem;
+}
+
+.authSwitch span{
+    color:var(--primary);
+    font-weight:600;
+    cursor:pointer;
+    margin-left:5px;
+}
+
+.authSwitch span:hover{
+    text-decoration:underline;
 }
 /* Mobile */
 @media(max-width:640px){
