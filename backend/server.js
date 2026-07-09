@@ -1,17 +1,23 @@
-
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const jobRoutes = require("./route/jobRoutes");
+const authRoutes = require("./route/authRoutes");
+const auth = require("./middleware/authMiddleware.js");
 
 dotenv.config();
 const app = express();
 connectDB();
 
-app.use(cors());
+app.use(cors({
+    credentials :true
+}));
 app.use(express.json());
-app.use("/api/jobs", jobRoutes);
+
+app.use("/api/jobs", auth,jobRoutes);
+app.use("/api/auth", authRoutes);
 
 app.use((req,res)=>{
     res.send("<h1>Error 404: Page not found</h1>");

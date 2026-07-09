@@ -1,12 +1,14 @@
-const Job = require("../model/Job");
+const Job = require("../model/JobModel");
 
 const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find();
+    const jobs = await Job.find({
+      user: req.user.id,
+    });
     res.status(200).json(jobs);
-
-  } catch (error) {
-    res.status(500).json({
+  } 
+  catch (error) {
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -15,7 +17,10 @@ const getJobs = async (req, res) => {
 
 const getJob = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id);
+    const job = await Job.findById({
+      _id: req.params.id,
+      user: req.user.id,
+    });
 
     if (!job) {
       return res.status(404).json({
@@ -24,9 +29,9 @@ const getJob = async (req, res) => {
       });
     }
     res.status(200).json(job);
-
-  } catch (error) {
-    res.status(500).json({
+  } 
+  catch (error) {
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -35,15 +40,18 @@ const getJob = async (req, res) => {
 
 const createJob = async (req, res) => {
   try {
-    const newJob = await Job.create(req.body);
-
+    const newJob = await Job.create({
+      ...req.body,
+      user: req.user.id,
+  });
     res.status(201).json({
       success: true,
       message: "Job created successfully",
       data: newJob,
     });
-  } catch (error) {
-    res.status(400).json({
+  } 
+  catch (error) {
+    return res.status(400).json({
       success: false,
       message: error.message,
     });
@@ -52,8 +60,11 @@ const createJob = async (req, res) => {
 
 const updateJob = async (req, res) => {
   try {
-    const updatedJob = await Job.findByIdAndUpdate(
-      req.params.id,
+    const updatedJob = await Job.findOneAndUpdate(
+      {
+        _id:req.params.id,
+        user:req.user.id
+      },
       req.body,
       {
         new: true,
@@ -67,14 +78,14 @@ const updateJob = async (req, res) => {
         message: "Job not found",
       });
     }
-
     res.status(200).json({
       success: true,
       message: "Job updated successfully",
       data: updatedJob,
     });
-  } catch (error) {
-    res.status(400).json({
+  } 
+  catch (error) {
+    return res.status(400).json({
       success: false,
       message: error.message,
     });
@@ -83,7 +94,10 @@ const updateJob = async (req, res) => {
 
 const deleteJob = async (req, res) => {
   try {
-    const deletedJob = await Job.findByIdAndDelete(req.params.id);
+    const deletedJob = await Job.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user.id,
+    });
 
     if (!deletedJob) {
       return res.status(404).json({
@@ -91,13 +105,13 @@ const deleteJob = async (req, res) => {
         message: "Job not found",
       });
     }
-
     res.status(200).json({
       success: true,
       message: "Job deleted successfully",
     });
-  } catch (error) {
-    res.status(500).json({
+  } 
+  catch (error) {
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
