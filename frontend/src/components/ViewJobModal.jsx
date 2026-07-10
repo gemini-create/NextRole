@@ -46,7 +46,7 @@ function ViewJobModal({ isOpen, onClose, job }) {
             <FaCalendar />
             <div>
               <label>Applied Date</label>
-              <p>{job.appliedDate || "-"}</p>
+              <p>{job.appliedDate.slice(0,10) || "-"}</p>
             </div>
           </div>
 
@@ -62,15 +62,8 @@ function ViewJobModal({ isOpen, onClose, job }) {
             <FaLink />
             <div>
               <label>Posting Link</label>
-
               {job.postingLink ? (
-                <a
-                  href={job.postingLink}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Open Job Posting
-                </a>
+                <a href={job.postingLink} target="_blank" rel="noreferrer">Open Job Posting</a>
               ) : (
                 <p>-</p>
               )}
@@ -79,10 +72,8 @@ function ViewJobModal({ isOpen, onClose, job }) {
 
           <div className="detailItem notes">
             <FaFileLines />
-
             <div>
               <label>Notes</label>
-
               <p>{job.notes || "No notes added."}</p>
             </div>
           </div>

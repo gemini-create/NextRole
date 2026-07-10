@@ -50,7 +50,8 @@ export const logout = async () => {
 };
 
 export const getMe = async ()=>{
-  const res= await fetch(`${API_URL}/auth/me`,{
+  const res = await fetch(`${API_URL}/auth/me`,{
+    method: "GET",
     credentials: "include",
   });
   const data = await res.json();

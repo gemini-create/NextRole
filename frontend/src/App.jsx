@@ -7,6 +7,7 @@ import AddJobModal from "./components/AddJobModal";
 import ViewJobModal from "./components/ViewJobModal";
 import DeleteJobModal from "./components/DeleteJobModal";
 import AuthModal from "./components/AuthModal";
+import Toast from "./components/Toast";
 
 import { getJobs,createJob,updateJob,deleteJob,} from "./services/jobService";
 import { logout,getMe } from "./services/authService";
@@ -21,11 +22,19 @@ const App = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [editingJob, setEditingJob] = useState(null);
   const [error, setError] = useState("");
+  const [toast,setToast] = useState("");
 
     // login/signup
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [authMode, setAuthMode] = useState("login");
+
+  const showToast = (message) => {
+    setToast(message);
+    setTimeout(() => { 
+      setToast(""); 
+    }, 3000);
+};
 
   //fetch all jobs
   const fetchJobs = async () => {
@@ -39,7 +48,7 @@ const App = () => {
       setTimeout(() => { setError("");}, 3000);
     }
   };
-
+// refresh effect
   useEffect(() => {
     const restoreUser  = async ()=>{
       try{
@@ -51,7 +60,8 @@ const App = () => {
     };
     restoreUser();
   },[]);
-
+ 
+  //if logged in then show jobs
   useEffect(() => {
     if(user){
         fetchJobs();
@@ -120,9 +130,10 @@ const App = () => {
     }
   };
   //setting the user state
-  const handleLogin = (loggedInUser) => {
+  const handleLogin = (loggedInUser, message="Login Successful!") => {
     setUser(loggedInUser);
     setIsAuthOpen(false);
+    showToast(message);
   };
 
   const handleLogout = async () => {
@@ -130,6 +141,7 @@ const App = () => {
       await logout();
       setUser(null);
       setJobs([]);
+      showToast("Logout Successful!");
     }
      catch(error){
       setError(error.message);
@@ -138,13 +150,7 @@ const App = () => {
   };
 
   return (
-    <div className="app">
-       {error && (
-      <div className="errorBanner">
-        {error}
-      </div>
-    )}
-    
+    <div className="app" id="portal-root">
       <Navbar
       user={user}
       onAddClick={() => {
@@ -202,13 +208,16 @@ const App = () => {
         job={selectedJob}
         onDelete={handleDeleteJob}
       />
+
       <AuthModal
           isOpen={isAuthOpen}
           onClose={() => setIsAuthOpen(false)}
           mode={authMode}
           setMode={setAuthMode}
           onLogin={handleLogin}
-          />
+       />
+        {toast && <Toast message={toast}/>}
+       {error && ( <div className="errorBanner"> {error}</div>)}
     </div>
 
   );

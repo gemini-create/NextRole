@@ -25,7 +25,7 @@ const AddJobModal = ({ isOpen, onClose,onAddJob,editingJob,onUpdateJob }) => {
       company: editingJob.company || "",
       role: editingJob.role || "",
       status: editingJob.status || "Applied",
-      appliedDate: editingJob.appliedDate || new Date().toISOString().slice(0,10),
+      appliedDate: editingJob.appliedDate ?  editingJob.appliedDate.slice(0, 10): new Date().toISOString().slice(0,10),
       postingLink: editingJob.postingLink || "",
       salary: editingJob.salary || "",
       notes: editingJob.notes || "",

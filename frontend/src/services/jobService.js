@@ -7,7 +7,7 @@ export const getJobs = async () => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch jobs");
+    throw new Error("500: Server Error");
   }
   return await res.json();
 };
@@ -24,7 +24,7 @@ export const createJob = async (newJob) => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to add job");
+    throw new Error("500: Server Error");
   }
 
   return await res.json();
@@ -42,7 +42,7 @@ export const updateJob = async (updatedJob) => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to update job");
+    throw new Error("500: Server Error");
   }
   return await res.json();
 };
@@ -55,7 +55,7 @@ export const deleteJob = async (id) => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to delete job");
+    throw new Error("500: Server Error");
   }
   return await res.json();
 };

@@ -14,7 +14,7 @@ function Navbar({user,onAddClick,onUserClick,onLogout}) {
         {user? (
           <>
             <span className="username">
-              <FaCircleUser/> {user.username}
+              <FaCircleUser className="userBtn"/> {user.username}
             </span>
             <button className="logoutBtn" onClick={onLogout}>Logout</button>
           </>
