@@ -30,7 +30,7 @@ export const login = async (userData) => {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.message || "Login failed");
+    throw new Error("Login failed");
   }
   return data;
 };
@@ -44,7 +44,7 @@ export const logout = async () => {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.message || "Logout failed");
+    throw new Error("Logout failed");
   }
   return data;
 };
@@ -56,7 +56,7 @@ export const getMe = async ()=>{
   });
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.message);
+    throw new Error("Failed to refresh");
   }
   return data;
 }
