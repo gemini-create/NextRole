@@ -6,7 +6,7 @@ const connectDB = require("./config/db");
 const jobRoutes = require("./route/jobRoutes");
 const authRoutes = require("./route/authRoutes");
 const auth = require("./middleware/authMiddleware.js");
-const {authLimiter,jobLimiter }= require("./middleware/rateLimitMiddleware.js");
+const {jobLimiter }= require("./middleware/rateLimitMiddleware.js");
 
 dotenv.config();
 const app = express();
@@ -20,11 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/jobs",jobLimiter,auth,jobRoutes);
-app.use("/api/auth", authLimiter,authRoutes);
-
-app.use((req,res)=>{
-    res.send("<h1>Error 404: Page not found</h1>");
-})
+app.use("/api/auth",authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
