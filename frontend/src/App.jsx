@@ -7,10 +7,13 @@ import AddJobModal from "./components/AddJobModal";
 import ViewJobModal from "./components/ViewJobModal";
 import DeleteJobModal from "./components/DeleteJobModal";
 import AuthModal from "./components/AuthModal";
+import ForgetPasswordModal from "./components/ForgetPasswordModal";
+import OTPModal from "./components/OTPModal";
+import ResetPasswordModal from "./components/ResetPasswordModal";
 import Toast from "./components/Toast";
 
 import { getJobs,createJob,updateJob,deleteJob,} from "./services/jobService";
-import { logout,getMe } from "./services/authService";
+import { logout,getMe,forgetPassword,verifyOtp,resetPassword } from "./services/authService";
 
 const App = () => {
   const [jobs, setJobs] = useState([]);
@@ -21,18 +24,25 @@ const App = () => {
 
   const [selectedJob, setSelectedJob] = useState(null);
   const [editingJob, setEditingJob] = useState(null);
-  const [error, setError] = useState("");
-  const [toast,setToast] = useState("");
+  const [toast,setToast] = useState(null);
 
     // login/signup
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [authMode, setAuthMode] = useState("login");
+  //forget password
+  const [forgetPasswordModal, setForgetPasswordModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+   //verify-otp
+  const [otpModal, setOtpModal] = useState(false);
+  const [resetToken, setResetToken] = useState("");
+   //reset password
+  const [resetPasswordModal, setResetPasswordModal] = useState(false);
 
-  const showToast = (message) => {
-    setToast(message);
+  const showToast = (message,type="success") => {
+    setToast({message,type});
     setTimeout(() => { 
-      setToast(""); 
+      setToast(null); 
     }, 3000);
 };
 
@@ -41,11 +51,9 @@ const App = () => {
     try {
       const data = await getJobs();
       setJobs(data);
-      setError("");
     } 
     catch (error) {
-      setError(error.message);
-      setTimeout(() => { setError("");}, 3000);
+      showToast(error.message, "error");
     }
   };
 // refresh effect
@@ -74,11 +82,10 @@ const App = () => {
       const data= await createJob(newJob);
       fetchJobs();
       setIsModalOpen(false);
-      setError(""); 
+      showToast(data.message);
     } 
     catch (error) {
-      setError(error.message);
-      setTimeout(() => {setError("");}, 3000);
+      showToast(error.message, "error");
     }
   };
 
@@ -101,11 +108,10 @@ const App = () => {
       fetchJobs();
       setEditingJob(null);
       setIsModalOpen(false);
-      setError(""); 
+      showToast(data.message);
     } 
     catch (error) {
-      setError(error.message);
-      setTimeout(() => { setError("");}, 3000);
+      showToast(error.message, "error");
     }
   };
 
@@ -120,13 +126,12 @@ const App = () => {
     try {
       const data=await deleteJob(id);
       fetchJobs();
-      setError("");  
       setIsDeleteOpen(false);
       setSelectedJob(null);
+      showToast(data.message);
     } 
     catch (error) {
-      setError(error.message);
-      setTimeout(() => {setError("");}, 3000);
+      showToast(error.message, "error");
     }
   };
   //setting the user state
@@ -136,21 +141,56 @@ const App = () => {
     showToast(message);
   };
 
+  const handleForgetPassword = async (email)=>{
+    try{
+      const data = await forgetPassword(email);
+      setResetEmail(email);
+      setForgetPasswordModal(false);
+      setOtpModal(true);
+      showToast(data.message);
+    }catch(error){
+      showToast(error.message, "error");
+    }
+  }
+
+   const handleVerifyOtp = async (email,otp)=>{
+    try{
+      const data = await verifyOtp(email,otp);
+      setResetToken(data.resetToken);
+      setOtpModal(false);
+      showToast(data.message);
+      setResetPasswordModal(true);
+    }catch(error){
+      showToast(error.message, "error");
+    }
+  }
+
+  const handleResetPassword = async (password)=>{
+    try{
+      const data =await resetPassword(resetToken,password);
+      setResetPasswordModal(false);
+      showToast(data.message);
+      setIsAuthOpen(true);
+    }
+    catch(error){
+      showToast(error.message, "error");
+    }
+  }
+
   const handleLogout = async () => {
     try{
-      await logout();
+      const data= await logout();
       setUser(null);
       setJobs([]);
-      showToast("Logout Successful!");
+      showToast(data.message);
     }
      catch(error){
-      setError(error.message);
-      setTimeout(() => {setError("");}, 3000);
+      showToast(error.message, "error");
      }
   };
 
   return (
-    <div className="app" id="portal-root">
+    <div className="app">
       <Navbar
       user={user}
       onAddClick={() => {
@@ -215,9 +255,31 @@ const App = () => {
           mode={authMode}
           setMode={setAuthMode}
           onLogin={handleLogin}
+          onForgetPassword={()=>{
+            setForgetPasswordModal(true)
+            setIsAuthOpen(false)}}
        />
-        {toast && <Toast message={toast}/>}
-       {error && ( <div className="errorBanner"> {error}</div>)}
+
+       <ForgetPasswordModal
+          isOpen={forgetPasswordModal}
+          onClose={()=> setForgetPasswordModal(false)}
+          onForget={handleForgetPassword}
+        />
+
+        <OTPModal
+          isOpen={otpModal}
+          onClose={()=> setOtpModal(false)}
+          email = {resetEmail}
+          onVerify={handleVerifyOtp}
+        />
+
+        <ResetPasswordModal
+          isOpen={resetPasswordModal}
+          onClose={()=> setResetPasswordModal(false)}
+          onReset={handleResetPassword}
+        />
+
+        {toast && <Toast message={toast.message} type={toast.type}/>}
     </div>
 
   );

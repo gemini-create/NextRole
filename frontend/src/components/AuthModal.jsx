@@ -2,7 +2,7 @@ import { FaXmark,FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useState,useEffect } from "react";
 import { signup, login,logout } from "../services/authService";
 
-const AuthModal = ({isOpen,onClose,mode,setMode,onLogin}) => {
+const AuthModal = ({isOpen,onClose,mode,setMode,onLogin,onForgetPassword}) => {
     const isSignUp = mode ==="signup";
     const [loading, setLoading] = useState(false);
     const [serverError, setServerError] = useState("");
@@ -95,7 +95,7 @@ const AuthModal = ({isOpen,onClose,mode,setMode,onLogin}) => {
                     email: inputs.email,
                     password: inputs.password,
                 });
-                onLogin(data.user,"Login Successfully!");
+                onLogin(data.user,"Login Successful!");
             }
         }catch(error){
             setServerError(error.message);
@@ -175,12 +175,14 @@ const AuthModal = ({isOpen,onClose,mode,setMode,onLogin}) => {
                 {errors.confirmPassword && (<span className="errorText"> {errors.confirmPassword}</span>)}
                 </div>
                 }
-
+                {!isSignUp &&
+                <p className="forgetPassword" onClick ={onForgetPassword}>Forget Password?</p>
+                }
                 <div className="modalFooter">
-                    <button type="button"className="cancelBtn" onClick={onClose}>Cancel</button>
-                    <button type="submit" className="submitBtn" disabled={loading}>
-                        {loading? "Please Wait":
-                         isSignUp? "Create Account" : "Login"}
+                        <button type="button"className="cancelBtn" onClick={onClose}>Cancel</button>
+                        <button type="submit" className="submitBtn" disabled={loading}>
+                            {loading? "Please Wait":
+                            isSignUp? "Create Account" : "Login"}
                         </button>
                 </div>
             </form>
